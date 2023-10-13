@@ -1,7 +1,7 @@
 package br.com.rubenszaes.todolist.controller;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import br.com.rubenszaes.todolist.model.User;
+import br.com.rubenszaes.todolist.model.UserModel;
 import br.com.rubenszaes.todolist.respository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +19,14 @@ public class UserController {
     private UserRepository userRepository;
     @Operation(tags = "Users", summary = "Listar usuários cadastrados.")
     @GetMapping
-    public List<User> findAll() {
+    public List<UserModel> findAll() {
         return userRepository.findAll();
     }
 
     @Operation(tags = "Users", summary = "Criar novo usuário.")
     @PostMapping()
-    public ResponseEntity create(@RequestBody User user) {
-        User byUsername = userRepository.findByUsername(user.getUsername());
+    public ResponseEntity create(@RequestBody UserModel user) {
+        UserModel byUsername = userRepository.findByUsername(user.getUsername());
 
         if (byUsername != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserName já cadastrado!");
@@ -35,7 +35,7 @@ public class UserController {
         var passwordHashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
         user.setPassword(passwordHashed);
 
-        User userCreated = userRepository.save(user);
+        UserModel userCreated = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
     }
 }

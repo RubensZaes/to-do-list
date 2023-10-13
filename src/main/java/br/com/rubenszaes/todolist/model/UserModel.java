@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @Entity(name = "tb_users")
-public class User {
+public class UserModel {
     @Id @GeneratedValue(generator = "UUID")
     private UUID id;
     @Column(unique = true)
