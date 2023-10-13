@@ -1,5 +1,6 @@
 package br.com.rubenszaes.todolist.controller;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import br.com.rubenszaes.todolist.model.User;
 import br.com.rubenszaes.todolist.respository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,9 @@ public class UserController {
         if (byUsername != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("UserName já cadastrado!");
         }
+
+        var passwordHashed = BCrypt.withDefaults().hashToString(12, user.getPassword().toCharArray());
+        user.setPassword(passwordHashed);
 
         User userCreated = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
